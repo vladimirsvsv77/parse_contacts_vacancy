@@ -24,7 +24,10 @@ db = client.hhemails2
 hhemails2 = db.hhemails2
 
 
-hhemails2.create_index([("email", pymongo.ASCENDING)], unique=True)
+try:
+    hhemails2.index_information()['email_1']
+except KeyError:
+    hhemails2.create_index([("email", pymongo.ASCENDING)], unique=True)
 
 
 def get_vac_by_day(date):
