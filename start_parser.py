@@ -87,6 +87,6 @@ def write_to_file(text):
     f.close()
 
 
-for i in hhemails.find():
+for i in hhemails2.find():
     if i['email'] is not None:
         write_to_file(i['email'])
