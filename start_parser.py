@@ -18,8 +18,8 @@ m_start = int(opt.m_start)
 m_end = int(opt.m_end)
 
 
-date1 = datetime.date(2018, m_start, start)
-date2 = datetime.date(2018, m_end, end)
+date1 = datetime.date(2018, m_start, d_start)
+date2 = datetime.date(2018, m_end, d_end)
 day = datetime.timedelta(days=1)
 
 
@@ -74,7 +74,7 @@ def get_vac_by_day(date):
 while date1 <= date2:
     print (date1.strftime('%Y-%m-%d'))
     try:
-        get_vac_by_day('2018-06-04')
+        get_vac_by_day(date1.strftime('%Y-%m-%d'))
     except:
         print('except', date1.strftime('%Y-%m-%d'))
         time.sleep(10)
