@@ -7,15 +7,19 @@ import argparse
 
 
 parser = argparse.ArgumentParser(description='start_parsing.py')
-parser.add_argument('-start')
-parser.add_argument('-end')
+parser.add_argument('-d_start')
+parser.add_argument('-d_end')
+parser.add_argument('-m_start')
+parser.add_argument('-m_end')
 opt = parser.parse_args()
-start = int(opt.start)
-end = int(opt.end)
+d_start = int(opt.start)
+d_end = int(opt.end)
+m_start = int(opt.start)
+m_end = int(opt.end)
 
 
-date1 = datetime.date(2018, 5, start)
-date2 = datetime.date(2018, 5, end)
+date1 = datetime.date(2018, m_start, start)
+date2 = datetime.date(2018, m_end, end)
 day = datetime.timedelta(days=1)
 
 
