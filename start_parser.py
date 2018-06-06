@@ -79,3 +79,14 @@ while date1 <= date2:
         print('except', date1.strftime('%Y-%m-%d'))
         time.sleep(10)
     date1 = date1 + day
+
+
+def write_to_file(text):
+    f = open('hh_emails.txt', 'a')
+    f.write(text + '\n')
+    f.close()
+
+
+for i in hhemails.find():
+    if i['email'] is not None:
+        write_to_file(i['email'])
