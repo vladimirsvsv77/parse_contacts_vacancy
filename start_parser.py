@@ -9,11 +9,9 @@ import argparse
 parser = argparse.ArgumentParser(description='start_parsing.py')
 parser.add_argument('-start')
 parser.add_argument('-end')
-parser.add_argument('-vac')
 opt = parser.parse_args()
 start = opt.start
 end = opt.end
-vacancy_name = opt.vac
 
 
 date1 = datetime.date(2018, 5, start)
@@ -43,7 +41,7 @@ def get_vac_by_day(date):
         date_end = date + 'T' + str(end) + ':00:00'
         req = requests.get(url_vac + 'date_from=' + date_start + '&date_to=' + date_end)
         for j in range(req.json()['pages'] + 1):
-            page_url = 'https://api.hh.ru/vacancies?text=' + vacancy_name + '&per_page=100&' + 'page=' + str(j) + '&'
+            page_url = 'https://api.hh.ru/vacancies?text=менеджер по продажам&per_page=100&' + 'page=' + str(j) + '&'
             req = requests.get(page_url + 'date_from=' + date_start + '&date_to=' + date_end)            
             try:
                 count += len(req.json()['items'])
@@ -74,4 +72,3 @@ while date1 <= date2:
         print('except', date1.strftime('%Y-%m-%d'))
         time.sleep(10)
     date1 = date1 + day
-    
