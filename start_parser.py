@@ -10,8 +10,8 @@ parser = argparse.ArgumentParser(description='start_parsing.py')
 parser.add_argument('-start')
 parser.add_argument('-end')
 opt = parser.parse_args()
-start = opt.start
-end = opt.end
+start = int(opt.start)
+end = int(opt.end)
 
 
 date1 = datetime.date(2018, 5, start)
