@@ -24,8 +24,8 @@ day = datetime.timedelta(days=1)
 
 
 client = MongoClient('localhost', 27017)
-db = client.hhemails2
-hhemails2 = db.hhemails2
+db = client.hhemails3
+hhemails3 = db.hhemails3
 
 
 try:
@@ -75,16 +75,20 @@ def get_vac_by_day(date):
                                 city = req['address']['city']
                             except:
                                 city = ''
+                            try:
+                                vac_name =req['name']
+                            except:
+                                vac_name = ''
                             empl = {
                                 "qid": str(start),
                                 "email": email,
-                                "vac": "sales",
+                                "vac": vac_name,
                                 "phone": phone,
-                                "name": name,
+                                "empl_name": name,
                                 "city": city,
                                 "vac_href": vac_href
                             }
-                            hhemails2.insert_one(empl)
+                            hhemails3.insert_one(empl)
                     except:
                         pass
             except:
@@ -107,6 +111,6 @@ def write_to_file(text):
     f.close()
 
 
-for i in hhemails2.find():
+for i in hhemails3.find():
     if i['email'] is not None:
         write_to_file(i['email'])
