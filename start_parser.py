@@ -34,9 +34,12 @@ except KeyError:
     hhemails2.create_index([("email", pymongo.ASCENDING)], unique=True)
 
 
+professions = 'менеджер по продажам or Sales manager or грузчик or Продавец-консультант or Продавец-консультант or повар or пекарь or Специалист колл центр or официант or водитель or продавец'
+
+
 def get_vac_by_day(date):
     count = 0
-    url_vac = 'https://api.hh.ru/vacancies?text=менеджер по продажам&per_page=100&'
+    url_vac = 'https://api.hh.ru/vacancies?text=' + professions + '&per_page=100&'
     for i in range(23):
         start = i
         if len(str(start)) == 1:
@@ -48,23 +51,40 @@ def get_vac_by_day(date):
         date_end = date + 'T' + str(end) + ':00:00'
         req = requests.get(url_vac + 'date_from=' + date_start + '&date_to=' + date_end)
         for j in range(req.json()['pages'] + 1):
-            page_url = 'https://api.hh.ru/vacancies?text=менеджер по продажам&per_page=100&' + 'page=' + str(j) + '&'
+            page_url = 'https://api.hh.ru/vacancies?text=' + professions + '&per_page=100&' + 'page=' + str(j) + '&'
             req = requests.get(page_url + 'date_from=' + date_start + '&date_to=' + date_end)            
             try:
                 count += len(req.json()['items'])
                 for k in req.json()['items']:
                     vac_id = k['id']
                     try:
-                        contants = requests.get('https://api.hh.ru/vacancies/' + str(vac_id)).json()['contacts']
-                        phones = contants['phones']
-                        email = contants['email']
-                        empl = {
-                            "qid": str(start),
-                            "email": email,
-                            "vac": "sales",
-                            "phones": phones
-                        }
-                        hhemails2.insert_one(empl)
+                        req = requests.get('https://api.hh.ru/vacancies/' + str(vac_id)).json()
+                        email = req['contacts']['email']
+                        if email is not None:
+                            vac_href = req['alternate_url']
+                            try:
+                                phones = req['contacts']['phones'][0] 
+                                phone = phones['country'] + phones['city'] + phones['number']
+                            except:
+                                phone = ''
+                            try:
+                                name = req['contacts']['name']
+                            except:
+                                name = ''
+                            try:
+                                city = req['address']['city']
+                            except:
+                                city = ''
+                            empl = {
+                                "qid": str(start),
+                                "email": email,
+                                "vac": "sales",
+                                "phone": phone,
+                                "name": name,
+                                "city": city,
+                                "vac_href": vac_href
+                            }
+                            hhemails2.insert_one(empl)
                     except:
                         pass
             except:
