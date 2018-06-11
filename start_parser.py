@@ -34,7 +34,7 @@ except KeyError:
     hhemails3.create_index([("email", pymongo.ASCENDING)], unique=True)
 
 
-professions = 'менеджер по продажам or Sales manager or грузчик or Продавец-консультант or Продавец-консультант or повар or пекарь or Специалист колл центр or официант or водитель or продавец'
+professions = ''
 
 
 def get_vac_by_hour(date_start, date_end, url_vac):
