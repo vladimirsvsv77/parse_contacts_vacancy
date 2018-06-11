@@ -29,9 +29,9 @@ hhemails3 = db.hhemails3
 
 
 try:
-    hhemails2.index_information()['email_1']
+    hhemails3.index_information()['email_1']
 except KeyError:
-    hhemails2.create_index([("email", pymongo.ASCENDING)], unique=True)
+    hhemails3.create_index([("email", pymongo.ASCENDING)], unique=True)
 
 
 professions = 'менеджер по продажам or Sales manager or грузчик or Продавец-консультант or Продавец-консультант or повар or пекарь or Специалист колл центр or официант or водитель or продавец'
