@@ -37,6 +37,53 @@ except KeyError:
 professions = 'менеджер по продажам or Sales manager or грузчик or Продавец-консультант or Продавец-консультант or повар or пекарь or Специалист колл центр or официант or водитель or продавец'
 
 
+def get_vac_by_hour(date_start, date_end):
+    req = requests.get(url_vac + 'date_from=' + date_start + '&date_to=' + date_end)
+    for j in range(req.json()['pages'] + 1):
+        page_url = 'https://api.hh.ru/vacancies?text=' + professions + '&per_page=100&' + 'page=' + str(j) + '&'
+        req = requests.get(page_url + 'date_from=' + date_start + '&date_to=' + date_end)            
+        try:
+            count += len(req.json()['items'])
+            for k in req.json()['items']:
+                vac_id = k['id']
+                try:
+                    req = requests.get('https://api.hh.ru/vacancies/' + str(vac_id)).json()
+                    email = req['contacts']['email']
+                    if email is not None:
+                        vac_href = req['alternate_url']
+                        try:
+                            phones = req['contacts']['phones'][0] 
+                            phone = phones['country'] + phones['city'] + phones['number']
+                        except:
+                            phone = ''
+                        try:
+                            name = req['contacts']['name']
+                        except:
+                            name = ''
+                        try:
+                            city = req['address']['city']
+                        except:
+                            city = ''
+                        try:
+                            vac_name =req['name']
+                        except:
+                            vac_name = ''
+                        empl = {
+                            "qid": str(start),
+                            "email": email,
+                            "vac": vac_name,
+                            "phone": phone,
+                            "empl_name": name,
+                            "city": city,
+                            "vac_href": vac_href
+                        }
+                        hhemails3.insert_one(empl)
+                except:
+                    pass
+        except:
+            print(req.json())
+
+
 def get_vac_by_day(date):
     count = 0
     url_vac = 'https://api.hh.ru/vacancies?text=' + professions + '&per_page=100&'
@@ -47,52 +94,10 @@ def get_vac_by_day(date):
         end = i + 1
         if len(str(end)) == 1:
             end = '0' + str(end)
-        date_start = date + 'T' + str(start) + ':00:00'
-        date_end = date + 'T' + str(end) + ':00:00'
-        req = requests.get(url_vac + 'date_from=' + date_start + '&date_to=' + date_end)
-        for j in range(req.json()['pages'] + 1):
-            page_url = 'https://api.hh.ru/vacancies?text=' + professions + '&per_page=100&' + 'page=' + str(j) + '&'
-            req = requests.get(page_url + 'date_from=' + date_start + '&date_to=' + date_end)            
-            try:
-                count += len(req.json()['items'])
-                for k in req.json()['items']:
-                    vac_id = k['id']
-                    try:
-                        req = requests.get('https://api.hh.ru/vacancies/' + str(vac_id)).json()
-                        email = req['contacts']['email']
-                        if email is not None:
-                            vac_href = req['alternate_url']
-                            try:
-                                phones = req['contacts']['phones'][0] 
-                                phone = phones['country'] + phones['city'] + phones['number']
-                            except:
-                                phone = ''
-                            try:
-                                name = req['contacts']['name']
-                            except:
-                                name = ''
-                            try:
-                                city = req['address']['city']
-                            except:
-                                city = ''
-                            try:
-                                vac_name =req['name']
-                            except:
-                                vac_name = ''
-                            empl = {
-                                "qid": str(start),
-                                "email": email,
-                                "vac": vac_name,
-                                "phone": phone,
-                                "empl_name": name,
-                                "city": city,
-                                "vac_href": vac_href
-                            }
-                            hhemails3.insert_one(empl)
-                    except:
-                        pass
-            except:
-                print(req.json())
+        get_vac_by_hour(date + 'T' + str(start) + ':00:00' + date + 'T' + str(start) + ':30:00')
+        get_vac_by_hour(date + 'T' + str(start) + ':30:00' + date + 'T' + str(end) + ':00:00')
+
+        
 
 
 while date1 <= date2:
