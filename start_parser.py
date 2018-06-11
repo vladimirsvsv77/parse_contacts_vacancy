@@ -37,13 +37,12 @@ except KeyError:
 professions = 'менеджер по продажам or Sales manager or грузчик or Продавец-консультант or Продавец-консультант or повар or пекарь or Специалист колл центр or официант or водитель or продавец'
 
 
-def get_vac_by_hour(date_start, date_end):
+def get_vac_by_hour(date_start, date_end, url_vac):
     req = requests.get(url_vac + 'date_from=' + date_start + '&date_to=' + date_end)
     for j in range(req.json()['pages'] + 1):
         page_url = 'https://api.hh.ru/vacancies?text=' + professions + '&per_page=100&' + 'page=' + str(j) + '&'
         req = requests.get(page_url + 'date_from=' + date_start + '&date_to=' + date_end)            
         try:
-            count += len(req.json()['items'])
             for k in req.json()['items']:
                 vac_id = k['id']
                 try:
@@ -69,7 +68,7 @@ def get_vac_by_hour(date_start, date_end):
                         except:
                             vac_name = ''
                         empl = {
-                            "qid": str(start),
+                            "qid": str(vac_id),
                             "email": email,
                             "vac": vac_name,
                             "phone": phone,
@@ -85,7 +84,6 @@ def get_vac_by_hour(date_start, date_end):
 
 
 def get_vac_by_day(date):
-    count = 0
     url_vac = 'https://api.hh.ru/vacancies?text=' + professions + '&per_page=100&'
     for i in range(23):
         start = i
@@ -94,8 +92,8 @@ def get_vac_by_day(date):
         end = i + 1
         if len(str(end)) == 1:
             end = '0' + str(end)
-        get_vac_by_hour(date + 'T' + str(start) + ':00:00', date + 'T' + str(start) + ':30:00')
-        get_vac_by_hour(date + 'T' + str(start) + ':30:00', date + 'T' + str(end) + ':00:00')
+        get_vac_by_hour(date + 'T' + str(start) + ':00:00', date + 'T' + str(start) + ':30:00', url_vac)
+        get_vac_by_hour(date + 'T' + str(start) + ':30:00', date + 'T' + str(end) + ':00:00', url_vac)
 
         
 while date1 <= date2:
