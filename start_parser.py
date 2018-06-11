@@ -94,12 +94,10 @@ def get_vac_by_day(date):
         end = i + 1
         if len(str(end)) == 1:
             end = '0' + str(end)
-        get_vac_by_hour(date + 'T' + str(start) + ':00:00' + date + 'T' + str(start) + ':30:00')
-        get_vac_by_hour(date + 'T' + str(start) + ':30:00' + date + 'T' + str(end) + ':00:00')
+        get_vac_by_hour(date + 'T' + str(start) + ':00:00', date + 'T' + str(start) + ':30:00')
+        get_vac_by_hour(date + 'T' + str(start) + ':30:00', date + 'T' + str(end) + ':00:00')
 
         
-
-
 while date1 <= date2:
     print (date1.strftime('%Y-%m-%d'))
     try:
