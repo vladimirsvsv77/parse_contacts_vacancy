@@ -107,7 +107,7 @@ while date1 <= date2:
 
 
 def write_to_file(text):
-    f = open('hh_emails.txt', 'a')
+    f = open('hh_emails1.txt', 'a')
     f.write(text + '\n')
     f.close()
 
