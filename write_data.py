@@ -15,4 +15,4 @@ def write_to_file(text):
 
 for i in hhemails3.find():
     if i['email'] is not None:
-        write_to_file(i['email'] + ';' + i['vac'] + ';' + i['phone'] + ';' + i['empl_name'] + ';' + i['city'] + ';' + i['vac_href'])
+        write_to_file(str(i['email']) + ';' + str(i['vac']) + ';' + str(i['phone']) + ';' + str(i['empl_name']) + ';' + str(i['city']) + ';' + str(i['vac_href']))
